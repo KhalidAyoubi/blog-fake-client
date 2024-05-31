@@ -84,20 +84,29 @@
 </head>
 
 <body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="bloggerlist.html">Inicio</a></li>
+            <li><a href="bloggerform.html">Nueva entrada</a></li>
+        </ul>
+    </nav>
+    <button id="loginLogoutLink"></button>
+</header>
+
 <input type="text" id="searchInput" placeholder="Buscar por título..." onkeyup="filtrarEntradas()">
 <div id="app">BLOG</div>
 
-    <button id="loginLogoutLink"></button>
+
 
 
 <script type="module">
     import { AuthController } from "./controller/AuthController.js";
-
     const authController = new AuthController();
 
     // Configuración del estado de inicio/cierre de sesión
     const authInfo = localStorage.getItem('authInfo');
-    console.log("AuthInfo:", authInfo);
+    //console.log("AuthInfo:", authInfo);
 
     let loginLogoutLink = document.querySelector("#loginLogoutLink");
     if (authInfo) {
@@ -112,6 +121,94 @@
             authController.logIn();
         })
     }
+
+    //ENTRADA
+    import { EntradaController } from "./controller/EntradaController.js";
+
+    const entradaController = new EntradaController();
+
+    // Pintar entradas
+    async function pintarEntradas(entradas, busqueda = "") {
+        const container = document.querySelector('#app');
+        container.innerHTML = ''; // Limpia el contenedor antes de mostrar los resultados
+
+        console.log("Entrabas pintar:", entradas)
+        entradas.filter(entrada => entrada.getTitulo().toLowerCase().includes(busqueda.toLowerCase())).forEach(entrada => {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'container';
+
+            const title = document.createElement('h4');
+            title.className = 'title';
+            title.textContent = entrada.getTitulo();
+
+            const date = document.createElement('p');
+            date.className = 'details';
+            date.textContent = `Publicado el: ${new Date(entrada.getFechaPublicacion()).toLocaleDateString()}`;
+
+            const author = document.createElement('p');
+            author.className = 'details';
+            author.textContent = `Autor: ${entrada.getAutor()}`;
+
+            cardContainer.appendChild(title);
+            cardContainer.appendChild(date);
+            cardContainer.appendChild(author);
+
+            if (entrada.getEtiquetas()) {
+                entrada.getEtiquetas().forEach(etiqueta => {
+                    const tag = document.createElement('span');
+                    tag.className = 'tag';
+                    tag.textContent = etiqueta;
+                    cardContainer.appendChild(tag);
+                });
+            }
+
+            // Botón Editar
+            const editButton = document.createElement('button');
+            editButton.className = 'button edit';
+            editButton.textContent = 'Editar';
+            editButton.onclick = function () {
+                window.location.href = `bloggerform.html?postId=${entrada.getId()}`;
+            };
+
+            // Botón Borrar
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'button delete';
+            deleteButton.textContent = 'Borrar';
+            deleteButton.onclick = function () {
+                if (confirm('¿Estás seguro de que quieres borrar este post?')) {
+                    borrarPost(entrada.getId());
+                }
+            };
+
+            // Botón ver post
+            const viewPostButton = document.createElement('button');
+            viewPostButton.className = 'button post';
+            viewPostButton.textContent = 'Leer';
+            viewPostButton.onclick = function () {
+                window.location.href = `verpost.html?postId=${entrada.getId()}`;
+            };
+            viewPostButton.style.backgroundColor = "orange";
+            viewPostButton.style.color = "black ";
+
+            cardContainer.appendChild(editButton);
+            cardContainer.appendChild(deleteButton);
+            cardContainer.appendChild(viewPostButton);
+
+            card.appendChild(cardContainer);
+            container.appendChild(card);
+        });
+    }
+
+    (async ()=>{
+        const entradas = await entradaController.getEntradas();
+        console.log("eyy",entradas);
+        pintarEntradas(entradas);
+    })()
+
+
 </script>
 </body>
 
