@@ -3,7 +3,8 @@ export class Entrada {
     #titulo;
     #fechaPublicacion;
     #autor;
-    #etiquetas
+    #etiquetas;
+    #contenido;
 
     /*constructor(id, titulo, fechaPublicacion, autor, etiquetas) {
         this._id = id;
@@ -54,5 +55,14 @@ export class Entrada {
 
     setEtiquetas(value) {
         this.#etiquetas = value;
+    }
+
+
+    getContenido() {
+        return this.#contenido;
+    }
+
+    setContenido(value) {
+        this.#contenido = value;
     }
 }

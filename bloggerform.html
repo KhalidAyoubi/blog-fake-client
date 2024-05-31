@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Post de Blogger - KhalidRecetas</title>
+    <script src="https://cdn.tiny.cloud/1/0drqiecql7brphhis53nw7xfztvomdgqlr1mtyhkk2qejz69/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+                'a11ychecker','advlist','advcode','advtable','autolink','checklist','export',
+                'lists','link','image','charmap','preview','anchor','searchreplace','visualblocks',
+                'powerpaste','fullscreen','formatpainter','insertdatetime','media','table','help','wordcount'
+            ],
+            toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help'
+        });
+
+    </script>
+</head>
+<body>
+<span style="color: gray; font-style: italic; position: absolute; top: 0;">Título editable</span>
+<h1 contenteditable="true" style="border: 1px solid #0f0f0f;"></h1>
+<form>
+    <label style="position: relative; padding-top: 20px;">
+        <span style="color: gray; font-style: italic; position: absolute; top: 0;">Etiquetas (separadas por comas)</span>
+        <input style="width: 300px; margin-bottom: 10px;;" type="text" id="postTags" placeholder="Etiquetas (separadas por comas)">
+    </label>
+    <textarea id="mytextarea"></textarea>
+</form>
+<button id="guardarCambios">Guardar</button>
+
+<script type="module">
+
+    import { EntradaController } from "./controller/EntradaController.js";
+    import { Entrada } from "./model/Entrada.js";
+    const entradaController = new EntradaController();
+
+    let postId = new URLSearchParams(window.location.search).get('postId');
+
+    (async ()=>{
+        if (postId) {
+            const entrada = await entradaController.getEntradaById(postId);
+            console.log("Entrada:", entrada);
+            cargarPost(entrada);
+        }
+        document.querySelector('#guardarCambios').addEventListener('click', guardarCambios);
+
+    })()
+
+
+    function cargarPost(entrada) {
+        document.querySelector("h1").innerHTML = entrada.getTitulo();
+        tinymce.get('mytextarea').setContent(entrada.getContenido());
+        if (entrada.getEtiquetas() && entrada.getEtiquetas().length > 0) {
+            document.querySelector('#postTags').value = entrada.getEtiquetas().join(', ');
+        }
+    }
+
+    function guardarCambios() {
+        console.log("hola guardar cambios")
+        let entrada = new Entrada();
+        let contenido = tinymce.get('mytextarea').getContent();
+        console.log("Contenido",contenido);
+        entrada.setContenido(contenido);
+        entrada.setTitulo(document.querySelector('h1').innerText);
+        entrada.getEtiquetas(document.querySelector('#postTags').value.split(',').map(etiqueta => etiqueta.trim()));
+        if (postId){
+            entrada.setId(postId);
+        }
+
+        entradaController.guardarOActualizarEntrada(entrada);
+    }
+
+
+</script>
+</body>
+</html>

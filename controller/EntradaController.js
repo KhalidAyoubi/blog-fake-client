@@ -14,4 +14,12 @@ export class EntradaController{
     borrarEntrada(postId){
         this.#entradaService.borrarEntrada(postId);
     }
+
+    getEntradaById(postId){
+        return this.#entradaService.getEntradaById(postId);
+    }
+
+    guardarOActualizarEntrada(entrada){
+        this.#entradaService.guardarOActualizarEntrada(entrada);
+    }
 }

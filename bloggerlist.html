@@ -190,18 +190,19 @@
             };
 
             // Botón ver post
-            const viewPostButton = document.createElement('button');
+            /*const viewPostButton = document.createElement('button');
             viewPostButton.className = 'button post';
             viewPostButton.textContent = 'Leer';
             viewPostButton.onclick = function () {
+                //pruebaId(entrada.getId()); //verificar que hace la búsqueda por ID
                 window.location.href = `verpost.html?postId=${entrada.getId()}`;
             };
             viewPostButton.style.backgroundColor = "orange";
-            viewPostButton.style.color = "black ";
+            viewPostButton.style.color = "black ";*/
 
             cardContainer.appendChild(editButton);
             cardContainer.appendChild(deleteButton);
-            cardContainer.appendChild(viewPostButton);
+            //cardContainer.appendChild(viewPostButton);
 
             card.appendChild(cardContainer);
             container.appendChild(card);
