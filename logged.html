@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KhalidRecetas</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+        nav {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+<script>
+    // Extraer parámetros del hash de la URL
+    let params = {};
+    let hash = window.location.hash.substring(1); // Elimina el '#' de la url
+
+    if (hash) {
+        let regex = /([^&=]+)=([^&]*)/g, m;
+        while (m = regex.exec(hash)) {
+            params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+        }
+    }
+
+    localStorage.setItem('authInfo', JSON.stringify(params));
+
+    // Ocultar el fragmento de la URL que contiene toda esa información
+    window.history.pushState({}, document.title, "/logged.html");
+
+    // Recuperar la información de 'authInfo' y la muestra en la consola
+    let info = localStorage.getItem('authInfo') ? JSON.parse(localStorage.getItem('authInfo')) : null;
+    if (info) {
+        console.log(info);
+        console.log(info['access_token']);
+        console.log(info['expires_in']);
+    } else {
+        console.log("No hay datos en authInfo en localStorage.");
+    }
+    console.log(info);
+    console.log(info['access_token']);
+    console.log(info['expires_in']);
+
+    fetch("https://www.googleapis.com/oauth2/v3/userinfo",{
+        headers: {
+            "Authorization": `Bearer ${info['access_token']}`
+        }
+    })
+        .then(data => data.json())
+        .then(userInfo => {
+            console.log(userInfo);
+            console.log(userInfo.name);
+        });
+
+    location.href = "http://127.0.0.1:5500/bloggerlist.html";
+</script>
+<script src="./js.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts - KhalidRecetas</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        #app {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 300px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 2px 8px;
+            margin: 2px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .edit {
+            background-color: #4CAF50;
+            /* Green */
+        }
+
+        .delete {
+            background-color: #f44336;
+            /* Red */
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<input type="text" id="searchInput" placeholder="Buscar por título..." onkeyup="filtrarEntradas()">
+<div id="app">BLOG</div>
+
+    <button id="loginLogoutLink"></button>
+
+
+<script type="module">
+    import { AuthController } from "./controller/AuthController.js";
+
+    const authController = new AuthController();
+
+    // Configuración del estado de inicio/cierre de sesión
+    const authInfo = localStorage.getItem('authInfo');
+    console.log("AuthInfo:", authInfo);
+
+    let loginLogoutLink = document.querySelector("#loginLogoutLink");
+    if (authInfo) {
+        loginLogoutLink.textContent = 'Log out';
+
+        loginLogoutLink.addEventListener('click', function(){
+            authController.logOut();
+        })
+    } else {
+        loginLogoutLink.textContent = 'Log in';
+        loginLogoutLink.addEventListener('click', function(){
+            authController.logIn();
+        })
+    }
+</script>
+</body>
+
+</html>
