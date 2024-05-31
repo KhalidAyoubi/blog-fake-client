@@ -19,9 +19,81 @@
         });
 
     </script>
+
+    <style>
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        nav {
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        nav ul li:nth-child(2) a, nav ul li a:hover {
+            background-color: #0085ff;
+            color: #000000;
+            font-weight: bolder;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        header button {
+            background-color: #930909;
+            color: #d6d6d6;
+            font-weight: bolder;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        header button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<span style="color: gray; font-style: italic; position: absolute; top: 0;">Título editable</span>
+<header>
+    <nav>
+        <ul>
+            <li><a href="bloggerlist.html">Inicio</a></li>
+            <li><a href="bloggerform.html">Nueva entrada</a></li>
+        </ul>
+    </nav>
+    <button id="loginLogoutLink"></button>
+</header>
+<span style="position: relative;">
+    <span style="color: gray; font-style: italic; position: absolute; top: 5px; width: 100vw">Título editable</span>
+</span>
 <h1 contenteditable="true" style="border: 1px solid #0f0f0f;"></h1>
 <form>
     <label style="position: relative; padding-top: 20px;">
@@ -33,7 +105,28 @@
 <button id="guardarCambios">Guardar</button>
 
 <script type="module">
+    import { AuthController } from "./controller/AuthController.js";
+    const authController = new AuthController();
 
+    // Configuración del estado de inicio/cierre de sesión
+    const authInfo = localStorage.getItem('authInfo');
+    //console.log("AuthInfo:", authInfo);
+
+    let loginLogoutLink = document.querySelector("#loginLogoutLink");
+    if (authInfo) {
+        loginLogoutLink.textContent = 'Log out';
+
+        loginLogoutLink.addEventListener('click', function(){
+            authController.logOut();
+        })
+    } else {
+        loginLogoutLink.textContent = 'Log in';
+        loginLogoutLink.addEventListener('click', function(){
+            authController.logIn();
+        })
+    }
+
+    //ENTRADA
     import { EntradaController } from "./controller/EntradaController.js";
     import { Entrada } from "./model/Entrada.js";
     const entradaController = new EntradaController();
@@ -66,7 +159,7 @@
         console.log("Contenido",contenido);
         entrada.setContenido(contenido);
         entrada.setTitulo(document.querySelector('h1').innerText);
-        entrada.getEtiquetas(document.querySelector('#postTags').value.split(',').map(etiqueta => etiqueta.trim()));
+        entrada.setEtiquetas(document.querySelector('#postTags').value.split(',').map(etiqueta => etiqueta.trim()));
         if (postId){
             entrada.setId(postId);
         }

@@ -12,6 +12,7 @@
             align-items: center;
             gap: 20px;
             padding: 20px;
+            padding-top: 0;
             background-color: #f0f0f0;
         }
 
@@ -79,8 +80,67 @@
             background-color: #f44336;
             /* Red */
         }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        nav {
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        nav ul li:nth-child(1) a, nav ul li a:hover {
+            background-color: #0085ff;
+            color: #000000;
+            font-weight: bolder;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        header button {
+            background-color: #930909;
+            color: #d6d6d6;
+            font-weight: bolder;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        header button:hover {
+            background-color: #0056b3;
+        }
+
     </style>
-    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -94,7 +154,7 @@
     <button id="loginLogoutLink"></button>
 </header>
 
-<input type="text" id="searchInput" placeholder="Buscar por título..." onkeyup="filtrarEntradas()">
+<input type="text" id="cercador" placeholder="Buscar por título...">
 <div id="app">BLOG</div>
 
 
@@ -211,6 +271,15 @@
 
     function borrarEntrada(postId) {
         entradaController.borrarEntrada(postId);
+    }
+
+
+    const cercadorInput = document.getElementById('cercador');
+    // Agregar un event listener. No sé porqué, pero no lo detecta si lo pongo en onkeyup=""
+    cercadorInput.addEventListener('input', filtrarEntradas);
+    function filtrarEntradas(){
+        const busqueda = document.querySelector('#cercador').value;
+        pintarEntradas(entradas, busqueda);
     }
 
 
