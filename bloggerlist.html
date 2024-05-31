@@ -124,15 +124,21 @@
 
     //ENTRADA
     import { EntradaController } from "./controller/EntradaController.js";
-
     const entradaController = new EntradaController();
+
+    let entradas;
+    (async ()=>{
+        entradas = await entradaController.getEntradas();
+        console.log("Entrades del controller:",entradas);
+        pintarEntradas(entradas);
+    })()
 
     // Pintar entradas
     async function pintarEntradas(entradas, busqueda = "") {
         const container = document.querySelector('#app');
         container.innerHTML = ''; // Limpia el contenedor antes de mostrar los resultados
 
-        console.log("Entrabas pintar:", entradas)
+        console.log("Entradas a pintar:", entradas)
         entradas.filter(entrada => entrada.getTitulo().toLowerCase().includes(busqueda.toLowerCase())).forEach(entrada => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -179,7 +185,7 @@
             deleteButton.textContent = 'Borrar';
             deleteButton.onclick = function () {
                 if (confirm('¿Estás seguro de que quieres borrar este post?')) {
-                    borrarPost(entrada.getId());
+                    borrarEntrada(entrada.getId());
                 }
             };
 
@@ -202,11 +208,9 @@
         });
     }
 
-    (async ()=>{
-        const entradas = await entradaController.getEntradas();
-        console.log("eyy",entradas);
-        pintarEntradas(entradas);
-    })()
+    function borrarEntrada(postId) {
+        entradaController.borrarEntrada(postId);
+    }
 
 
 </script>

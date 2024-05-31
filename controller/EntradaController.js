@@ -10,4 +10,8 @@ export class EntradaController{
     getEntradas(){
         return this.#entradaService.getEntradas();
     }
+
+    borrarEntrada(postId){
+        this.#entradaService.borrarEntrada(postId);
+    }
 }
